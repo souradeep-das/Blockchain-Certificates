@@ -1,0 +1,132 @@
+
+namespace org.esdm
+
+participant Student identified by aadharid {
+  o String aadharid
+  o String name
+  o String email
+  o String dob regex=/[0-3][0-9][0-1][0-9][1-2][0-9][0-9][0-9]/
+  o Address address
+  o String phone
+  o Education education default='PASS8'
+  o ProgressBar[] progress
+  o Double balance
+  o Category category
+
+}
+
+concept ProgressBar {
+  o String courseCode
+  o Integer courseProgress default=0
+  o Boolean paid default=false
+}
+
+concept Address {
+  o String city optional
+  o String state
+}
+
+enum Education {
+  o DIPLOMA
+  o PASS12
+  o PASS10
+  o PASS8
+}
+
+participant Trainer identified by regno {
+  o String regno
+  o String instituteName
+  o String email
+  o String orgType
+  o String pin
+  o Double balance
+}
+
+enum Category {
+  o NotConfirmed
+  o General
+  o ScheduledCaste
+  o ScheduledTribe
+  o OtherBackwardCaste
+}
+
+asset Course identified by courseCode {
+  o String courseCode
+  o String courseName
+  o Double courseFee
+  o String courseLevel
+  o String industry
+  o Education eligibility default='PASS8'
+  o Integer duration
+  --> Trainer trainer
+}
+
+
+asset Certificate identified by certId {
+  o String certId
+  -->Course course
+  -->Student student
+  o String studentName
+  -->Trainer trainer
+}
+
+transaction GenerateCertificate {
+  -->Student student
+  -->Course course
+}
+
+transaction CreateStudent {
+ o String aadharid
+ o String name
+ o String email
+ o String dob
+ o Address address
+ o String phone
+ o Education education
+}
+
+transaction CreateTrainer {
+  o String regno
+  o String instituteName
+  o String email
+  o String orgType
+  o String pin
+}
+
+transaction AddCourse {
+  o String courseCode
+  o String courseName
+  o Double courseFee
+  o String courseLevel
+  o String industry
+  o Education eligibility
+  o Integer duration
+  --> Trainer trainer
+  o String trainerPin
+}
+
+transaction TakeCourse {
+  -->Course course
+  -->Student student
+}
+
+transaction SetProgress {
+  o Integer progress
+  -->Student student
+  -->Course course
+}
+
+transaction PayStudent {
+  o Integer amount
+  -->Student student
+}
+
+transaction PayTrainer {
+  o Integer amount
+  -->Trainer trainer
+}
+
+transaction VerifyCasteCertificate {
+  o Category category
+  -->Student student
+}

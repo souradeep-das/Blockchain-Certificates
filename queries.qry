@@ -1,0 +1,10 @@
+
+
+//shows students certificate
+query displayCertificate {
+   description: "Shows the students certificates"
+   statement:
+      SELECT org.esdm.Certificate
+      WHERE (student == _$student)
+
+}
